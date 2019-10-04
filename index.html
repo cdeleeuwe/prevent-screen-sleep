@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Prevent screen sleep test</title>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        font-family: Arial, Helvetica, sans-serif
+      }
+
+      h1 {
+        font-size: 72px;
+        font-weight: bold;
+      }
+
+      button {
+        background: #f02223;
+        border: 0;
+        padding: 15px 20px;
+        border-radius: 4px;
+        color: #fff;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+    </style>
+    
+  </head>
+
+  <body>
+    <script src="assets/NoSleep.min.js"></script>
+    <h2>Prevent screen sleep test</h2>
+    <h1 id="clock-display">00:00</h1>
+    
+    <button id="button">
+      Start
+    </button>
+
+    <script>
+      document.getElementById('button').addEventListener('click', () => {
+        const noSleep = new NoSleep();
+        noSleep.enable();
+        updateTimer();
+      })
+
+      function updateTimer(seconds = 0) {
+        let m = Math.floor(seconds / 60);
+        let s = seconds - m * 60;
+        
+        m = (m < 10) ? "0" + m : m;
+        s = (s < 10) ? "0" + s : s;
+        
+        const time = m + ":" + s;
+        document.getElementById("clock-display").innerText = time;
+        document.getElementById("clock-display").textContent = time;
+        
+        setTimeout(() => updateTimer(seconds + 1), 1000);
+      }
+    </script>
+  </body>
+</html>
