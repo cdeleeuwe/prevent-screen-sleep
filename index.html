@@ -23,6 +23,8 @@
       h1 {
         font-size: 72px;
         font-weight: bold;
+        margin-top: 0;
+        margin-bottom: 25px;
       }
 
       button {
@@ -40,23 +42,40 @@
 
   <body>
     <script src="assets/NoSleep.min.js"></script>
-    <h2>Prevent screen sleep test</h2>
-    <h1 id="clock-display">00:00</h1>
+    <h2>Prevent screen sleep/standby mode <br> & reset clock on activity</h2>
+    <h1 id="clock-display">15:00</h1>
     
     <button id="button">
       Start
     </button>
 
     <script>
+      let seconds = 900;
+      let active = false;
+
       document.getElementById('button').addEventListener('click', () => {
+        if (active) {
+          return;
+        }
+
+        active = true;
+        
+        ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
+          .forEach(resetOnEvent);
+
         const noSleep = new NoSleep();
         noSleep.enable();
         updateTimer();
       })
 
-      function updateTimer(seconds = 0) {
+      function resetOnEvent(name) {
+        document.addEventListener(name, () => seconds = 901); 
+      }
+
+      function updateTimer(eventName) {
+        seconds -= 0.5;
         let m = Math.floor(seconds / 60);
-        let s = seconds - m * 60;
+        let s = Math.floor(seconds - m * 60);
         
         m = (m < 10) ? "0" + m : m;
         s = (s < 10) ? "0" + s : s;
@@ -65,7 +84,7 @@
         document.getElementById("clock-display").innerText = time;
         document.getElementById("clock-display").textContent = time;
         
-        setTimeout(() => updateTimer(seconds + 1), 1000);
+        setTimeout(() => updateTimer(), 500);
       }
     </script>
   </body>
